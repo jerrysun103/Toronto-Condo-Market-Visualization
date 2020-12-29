@@ -2,38 +2,64 @@ import pandas as pd
 import numpy as np
 import urllib.request
 import time
+from datetime import date
+from random import random
 
-def download_links(total_pages_num):
+def download_links(total_pages_num, url_prefix, start_offset, end_offset):
     links_done = 0
     links = pd.DataFrame(columns=['link'])  
 
     for page in range(1,total_pages_num + 1):
     
         user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-        url = "https://www.realmaster.com/en/for-sale/Toronto-ON?page=" + str(page)
+        
+        url = url_prefix + str(page)
+        
         headers={'User-Agent':user_agent,} 
 
         request=urllib.request.Request(url,None,headers) #The assembled request
-        data_raw = urllib.request.urlopen(request).read()
+        data_raw = urllib.request.urlopen(request).read().decode('utf-8')
         
-        print(data_raw)
+        # print(data_raw)
+
+        data_split = data_raw.split('<a class="listing-prop')[1:]
+
+        sleep_time = random()
+        time.sleep(sleep_time)
+
+        one_page_homes_num = len(data_split)
+
+        # print("there are {} homes in one page".format(one_page_homes_num))
+
+        for post in range(one_page_homes_num): 
+
+            try:
+                start = data_split[post].find('href=')
+                end = data_split[post].find(' target=')
+                links.loc[links_done] = data_split[post][(start + start_offset):(end - end_offset)]
+                links_done += 1
+            except:
+                print("An exception occurred")
         
+        print("download links on page {}".format(page))
 
-        # data_split = data_raw.split(b'/listing-status>')[1:]
-        # time.sleep(1)
-        
-        # for post in range(24): 
+    today = date.today()
+    day = today.strftime("%b-%d-%Y")
 
-        #     try:
-        #         start = data_split[post].find(b'href="/')
-        #         end = data_split[post].find(b'-vow"')
-        #         links.loc[links_done] = data_split[post][(start+7):(end+4)]
+    if "sale" in url_prefix:
+        links.to_csv('links_data/for_sale_links/house_for_sale_links_{}.csv'.format(day))
+    elif "sold" in url_prefix:
+        links.to_csv('links_data/sold_links/house_sold_links_{}.csv'.format(day))
+    else:
+        print("error in url prefix")
 
-        #         links_done += 1
-        #     except:
-        #         print("An exception occurred")
-                
-    links.to_csv('house_links.csv')
 
 if __name__ == '__main__':
-    download_links(1)
+    for_sale_url_prefix = 'https://www.realmaster.com/en/for-sale/Toronto-ON?page='
+    sold_url_prefix = "https://www.realmaster.com/en/sold-price/Toronto-ON?page="
+    start_offset = 6
+    end_offset = 1
+
+    total_pages_num = 170
+
+    download_links(total_pages_num, for_sale_url_prefix, start_offset, end_offset)
