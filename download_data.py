@@ -60,6 +60,10 @@ if __name__ == '__main__':
     start_offset = 6
     end_offset = 1
 
-    total_pages_num = 170
+    total_pages_num = 2
 
+    # download links for sale homes
     download_links(total_pages_num, for_sale_url_prefix, start_offset, end_offset)
+
+    # download links for sold homes
+    download_links(total_pages_num, sold_url_prefix, start_offset, end_offset)
