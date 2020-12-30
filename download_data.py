@@ -1,9 +1,11 @@
 import pandas as pd
 import numpy as np
 import urllib.request
+import bs4 as bs
 import time
 from datetime import date
 from random import random
+
 
 def download_links(total_pages_num, url_prefix, start_offset, end_offset):
     links_done = 0
@@ -53,6 +55,12 @@ def download_links(total_pages_num, url_prefix, start_offset, end_offset):
     else:
         print("error in url prefix")
 
+
+def download_home_data(link_path):
+    #read links 
+    links_df = pd.read_csv(link_path, index_col='Unnamed: 0')
+    res_df = data = pd.DataFrame(columns=['title', 'final_price', 'list_price', 'bedrooms','bathrooms','den','sqft','parking','description','Unit No','type',
+    'full_link','full_address'])
 
 if __name__ == '__main__':
     for_sale_url_prefix = 'https://www.realmaster.com/en/for-sale/Toronto-ON?page='
