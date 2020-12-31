@@ -63,9 +63,19 @@ def download_home_data(link_path):
     counter = 0
     #print(links_df.head(5))
 
-    attributes_array = ['title', 'MLS ID', 'transaction_type', 'home_type', 'unit', 'level', 
+    # attributes in output dataframe
+    attributes_array = ['title', 'MLS ID', 'transaction_type', 'home_type', 'level', 
     'first day on market', 'final_price', 'list_price', 'bedrooms', 'bathrooms', 'den', 'sqft', 'exposure', 
     'parking', 'locker', 'maintanance fee', 'description', 'link', 'address']
+
+    # attributes in realmaster name
+    # MLS ID, home_type, level, bedrooms, bathrooms, den, exposure, parking, locker, maintanance fee
+    realmaster_summary_dims = ["ID", "Ownership Type", "Level", "Rooms", "Exposure", "Parking Spots", 
+    "Locker", "Maint Fee"]
+
+    # mapping from realmaster name to output dataframe name
+    mapping_dict = {"ID":'MLS ID', "Ownership Type":'home_type', "Level":'level', "Exposure":'exposure', 
+    "Parking Spots":'parking', "Locker":'locker', "Maint Fee": 'maintanance fee'}
 
     res_df = pd.DataFrame(columns = attributes_array)
     for num in range(num_of_link):
@@ -103,13 +113,33 @@ def download_home_data(link_path):
 
         print(title_part_one + " | " + title_part_two)
         # populate others
-        # MLS ID, home_type, unit, level, first day on market, final_price, list_price, 
-        # bedrooms, bathrooms, den, sqft, exposure, parking, locker, 
-        # maintanance fee, description, address
-        table_html = soup.findAll("span", {"class": "summary-value"})
-        #print(list(table_html))
+        # MLS ID, home_type, level, bedrooms, bathrooms, den, exposure, parking, locker, maintanance fee
+        raw_html_lables = list(soup.findAll("span", {"class": "summary-label"}))
+        raw_html_values = list(soup.findAll("span", {"class": "summary-value"}))
         
-        print(soup.prettify())
+        assert(len(raw_html_lables) == len(raw_html_values))
+
+        html_lables, html_values = [], []
+        
+        for i in range(len(raw_html_lables)):
+            # for lable
+            start = raw_html_lables.find(">")
+            end = raw_html_lables.find("</")
+            lable = raw_html_lables[start+1:end]
+            # for value
+            start = raw_html_values.find(">")
+            end = raw_html_values.find("</")
+            value = raw_html_values[start+1:end]
+
+            html_lables.append(lable)
+            html_values.append(value)
+        
+        # Remaining: sqft, first day on market, final_price, list_price, description, address
+        
+        # print(soup.prettify())
+        # print(html_lables)
+        # print('----divide------')
+        # print(html_values)
         counter += 1
         
         # try:
