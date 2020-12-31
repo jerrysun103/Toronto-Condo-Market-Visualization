@@ -65,7 +65,7 @@ def download_home_data(link_path):
 
     # attributes in output dataframe
     attributes_array = ['title', 'MLS ID', 'transaction_type', 'home_type', 'level', 
-    'first day on market', 'final_price', 'list_price', 'bedrooms', 'bathrooms', 'den', 'sqft', 'exposure', 
+    'first day on market', 'sold_price', 'list_price', 'bedrooms', 'bathrooms', 'den', 'sqft', 'exposure', 
     'parking', 'locker', 'maintanance fee', 'description', 'link', 'address']
 
     # attributes in realmaster name
@@ -166,12 +166,13 @@ def download_home_data(link_path):
                 if lable in mapping_dict:
                     res_df.loc[num, mapping_dict[lable]] = value
 
-        #TODO: check findAll return is None or not for following
-        # Remaining: sqft, first day on market, final_price, list_price, address, description
+        # TODO: check findAll return is None or not for following
+        # Remaining: sqft, first day on market, sold_price, list_price, address, description
         # sqft
-        html_sqft = str(list(soup.findAll("span", {"class": "listing-prop-sqft"}))[0])
-        sqft_num = html_sqft.split("|")[1].split(" ")[1]
-        res_df.loc[num, 'sqft'] = sqft_num
+        if soup.findAll("span", {"class": "listing-prop-sqft"}) != []:
+            html_sqft = str(list(soup.findAll("span", {"class": "listing-prop-sqft"}))[0])
+            sqft_num = html_sqft.split("|")[1].split(" ")[1]
+            res_df.loc[num, 'sqft'] = sqft_num
       
         #first day on market
         # <p class="listing-prop-size"> <span class="listing-prop-dom"> 12 DOM </span>
@@ -183,17 +184,37 @@ def download_home_data(link_path):
         first_day_on_market = html_fdm.split("<span>")[1].strip()[1:9]
         res_df.loc[num, 'first day on market'] = first_day_on_market
 
-        # list price
-        # <h6 class="detail-lp">
-        #    $539,900 Asking price
-        #   </h6>
-        
+        # case one: for sale
+        if "Sale" in title_part_two:
+            html_sale_price = str(list(soup.findAll("span", {"class": "detail-price"}))[0])
+            start = html_sale_price.find("$")
+            end = html_sale_price.find(" |")
+            sale_price = html_sale_price[start+1:end]
+            res_df.loc[num, 'list_price'] = sale_price
+            
+        # case two: sold
+        else:
+            # list price
+            # <h6 class="detail-lp">
+            #    $539,900 Asking price
+            #   </h6>
+            html_list_price = str(list(soup.findAll("h6", {"class": "detail-lp"}))[0])
+            start = html_list_price.find("$")
+            end = html_list_price.find(" Asking")
+            list_price = html_list_price[start+1:end]
+            res_df.loc[num, 'list_price'] = list_price
+
+            # final price
+            # <span class="detail-price">
+            #     $535,000 Sold
+            #    </span>
+            html_sold_price = str(list(soup.findAll("span", {"class": "detail-price"}))[0])
+            start = html_sold_price.find("$")
+            end = html_sold_price.find(" Sold")
+            sold_price = html_sold_price[start+1:end]
+            res_df.loc[num, 'sold_price'] = sold_price
 
 
-        # final price
-        # <span class="detail-price">
-        #     $535,000 Sold
-        #    </span>
 
         # <span class="listing-prop-address">
         #    44 Beverly Glen Blvd
@@ -201,7 +222,18 @@ def download_home_data(link_path):
         #   <p class="listing-prop-address">
         #    Toronto, Ontario, M1W1W2
         #   </p>
+        html_address_first_half = str(list(soup.findAll("span", {"class": "listing-prop-address"}))[0])
+        start = html_address_first_half.find(">")
+        end = html_address_first_half.find("</")
+        address_first_half = html_address_first_half[start+1:end].strip()
+
+        html_address_second_half = str(list(soup.findAll("p", {"class": "listing-prop-address"}))[0])
+        s = html_address_second_half.find(">")
+        e = html_address_second_half.find("</")
+        address_second_half = html_address_second_half[s+1:e].strip()
         
+        address = address_first_half + ", " + address_second_half
+        res_df.loc[num, 'address'] = address
         
         print(soup.prettify())
         
@@ -237,4 +269,4 @@ if __name__ == '__main__':
     for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_Dec-29-2020.csv"
     sold_link_path = "links_data/sold_links/house_sold_links_Dec-29-2020.csv"
 
-    download_home_data(for_sale_link_path)
+    download_home_data(sold_link_path)
