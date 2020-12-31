@@ -82,8 +82,8 @@ def download_home_data(link_path):
         
         url = links_df.link[num]
 
-        # print(url)
-        # print("-----------------------------")
+        print(url)
+        print("-----------------------------")
 
         user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
         
@@ -111,7 +111,7 @@ def download_home_data(link_path):
         else:
             print("Error,link No.{} 's title information is not expected".format(num))
 
-        print(title_part_one + " | " + title_part_two)
+        # print(title_part_one + " | " + title_part_two)
         # populate others
         # MLS ID, home_type, level, bedrooms, bathrooms, den, exposure, parking, locker, maintanance fee
         raw_html_lables = list(soup.findAll("span", {"class": "summary-label"}))
@@ -123,23 +123,88 @@ def download_home_data(link_path):
         
         for i in range(len(raw_html_lables)):
             # for lable
-            start = raw_html_lables.find(">")
-            end = raw_html_lables.find("</")
-            lable = raw_html_lables[start+1:end]
+            raw_labe = str(raw_html_lables[i])
+            start = raw_labe.find(">")
+            end = raw_labe.find("</")
+            lable = raw_labe[start+1:end]
+
             # for value
-            start = raw_html_values.find(">")
-            end = raw_html_values.find("</")
-            value = raw_html_values[start+1:end]
+            raw_value = str(raw_html_values[i])
+            start = raw_value.find(">")
+            end = raw_value.find("</")
+            value = raw_value[start+1:end]
 
             html_lables.append(lable)
             html_values.append(value)
         
-        # Remaining: sqft, first day on market, final_price, list_price, description, address
+        for i in range(len(html_lables)):
+            lable = html_lables[i]
+            value = html_values[i]
+
+            if lable == "Rooms":
+                # bedroom vs bathroom vs den
+                bedrooms = value.split(',')
+                
+                # for bedroom & den
+                if "+" in bedrooms[0]:
+                    # case 1: den exist
+                    plus_index = bedrooms[0].find("+")
+                    bedroom_num = bedrooms[0][plus_index - 1:plus_index]
+                    den_num = bedrooms[0][plus_index + 1:plus_index + 2]
+                else:
+                    # case 2: no den, all rooms are bedroom
+                    start = bedrooms[0].find(":")
+                    bedroom_num = bedrooms[0][start+1:]
+                    res_df.loc[num, "bedrooms"] = bedroom_num
+                    res_df.loc[num, "den"] = 0
+                
+                # for bathroom
+                comma_index = bedrooms[2].find(":")
+                bathroom_num = bedrooms[2][comma_index+1:]
+                res_df.loc[num, "bathrooms"] = bathroom_num
+            else:
+                if lable in mapping_dict:
+                    res_df.loc[num, mapping_dict[lable]] = value
+
+        #TODO: check findAll return is None or not for following
+        # Remaining: sqft, first day on market, final_price, list_price, address, description
+        # sqft
+        html_sqft = str(list(soup.findAll("span", {"class": "listing-prop-sqft"}))[0])
+        sqft_num = html_sqft.split("|")[1].split(" ")[1]
+        res_df.loc[num, 'sqft'] = sqft_num
+      
+        #first day on market
+        # <p class="listing-prop-size"> <span class="listing-prop-dom"> 12 DOM </span>
+        # <span>
+        # (20201204 - 20201216)
+        # </span>
+        # </p>
+        html_fdm = str(list(soup.findAll("p", {"class": "listing-prop-size"}))[0])
+        first_day_on_market = html_fdm.split("<span>")[1].strip()[1:9]
+        res_df.loc[num, 'first day on market'] = first_day_on_market
+
+        # list price
+        # <h6 class="detail-lp">
+        #    $539,900 Asking price
+        #   </h6>
         
-        # print(soup.prettify())
-        # print(html_lables)
-        # print('----divide------')
-        # print(html_values)
+
+
+        # final price
+        # <span class="detail-price">
+        #     $535,000 Sold
+        #    </span>
+
+        # <span class="listing-prop-address">
+        #    44 Beverly Glen Blvd
+        #   </span>
+        #   <p class="listing-prop-address">
+        #    Toronto, Ontario, M1W1W2
+        #   </p>
+        
+        
+        print(soup.prettify())
+        
         counter += 1
         
         # try:
