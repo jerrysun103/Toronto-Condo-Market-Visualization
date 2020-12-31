@@ -71,8 +71,10 @@ def download_home_data(link_path):
     for num in range(num_of_link):
         
         url = links_df.link[num]
-        print(url)
+
+        # print(url)
         # print("-----------------------------")
+
         user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
         
         headers={'User-Agent':user_agent,} 
@@ -104,14 +106,16 @@ def download_home_data(link_path):
         # MLS ID, home_type, unit, level, first day on market, final_price, list_price, 
         # bedrooms, bathrooms, den, sqft, exposure, parking, locker, 
         # maintanance fee, description, address
-
-        # print(soup.prettify())
+        table_html = soup.findAll("span", {"class": "summary-value"})
+        #print(list(table_html))
+        
+        print(soup.prettify())
         counter += 1
-            
+        
         # try:
         # except:
         #     print("link No.{} is a bad link".format(num))
-        if num == 100:
+        if num == 0:
             exit()
         else:
             print("_________________")
