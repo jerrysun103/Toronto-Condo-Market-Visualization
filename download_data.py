@@ -78,174 +78,209 @@ def download_home_data(link_path):
     "Parking Spots":'parking', "Locker":'locker', "Maint Fee": 'maintanance fee'}
 
     res_df = pd.DataFrame(columns = attributes_array)
+
     for num in range(num_of_link):
-        
-        url = links_df.link[num]
+        if num == 1:
+            break
 
-        print(url)
-        print("-----------------------------")
+        try:
+            # url = links_df.link[num]
+            url = "https://www.realmaster.com/en/toronto-on/245-dalesford-rd/422-stonegate-queensway-TRBW5060247?d=https://www.realmaster.com/en/sold-price/Toronto-ON?page=17"
+            # print(url)
+            # print("-----------------------------")
 
-        user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-        
-        headers={'User-Agent':user_agent,} 
-
-        request=urllib.request.Request(url, None, headers) 
-
-        html_doc = urllib.request.urlopen(request).read()
-                
-        soup = bs.BeautifulSoup(html_doc, 'html.parser')
-
-        # populate link url
-        res_df.loc[num, 'link'] = url
-
-        # populate title & transaction_type
-        title_components_lst = soup.title.contents[0].split('|')
-        title_part_one = title_components_lst[0].strip()
-        title_part_two = title_components_lst[1].strip()
-        res_df.loc[num, 'title'] = title_part_one + " | " + title_part_two
-
-        if "Sale" in title_part_two:
-            res_df.loc[num, 'transaction_type'] = "for sale"
-        elif "Sold" in title_part_two:
-            res_df.loc[num, 'transaction_type'] = "sold"
-        else:
-            print("Error,link No.{} 's title information is not expected".format(num))
-
-        # print(title_part_one + " | " + title_part_two)
-        # populate others
-        # MLS ID, home_type, level, bedrooms, bathrooms, den, exposure, parking, locker, maintanance fee
-        raw_html_lables = list(soup.findAll("span", {"class": "summary-label"}))
-        raw_html_values = list(soup.findAll("span", {"class": "summary-value"}))
-        
-        assert(len(raw_html_lables) == len(raw_html_values))
-
-        html_lables, html_values = [], []
-        
-        for i in range(len(raw_html_lables)):
-            # for lable
-            raw_labe = str(raw_html_lables[i])
-            start = raw_labe.find(">")
-            end = raw_labe.find("</")
-            lable = raw_labe[start+1:end]
-
-            # for value
-            raw_value = str(raw_html_values[i])
-            start = raw_value.find(">")
-            end = raw_value.find("</")
-            value = raw_value[start+1:end]
-
-            html_lables.append(lable)
-            html_values.append(value)
-        
-        for i in range(len(html_lables)):
-            lable = html_lables[i]
-            value = html_values[i]
-
-            if lable == "Rooms":
-                # bedroom vs bathroom vs den
-                bedrooms = value.split(',')
-                
-                # for bedroom & den
-                if "+" in bedrooms[0]:
-                    # case 1: den exist
-                    plus_index = bedrooms[0].find("+")
-                    bedroom_num = bedrooms[0][plus_index - 1:plus_index]
-                    den_num = bedrooms[0][plus_index + 1:plus_index + 2]
-                else:
-                    # case 2: no den, all rooms are bedroom
-                    start = bedrooms[0].find(":")
-                    bedroom_num = bedrooms[0][start+1:]
-                    res_df.loc[num, "bedrooms"] = bedroom_num
-                    res_df.loc[num, "den"] = 0
-                
-                # for bathroom
-                comma_index = bedrooms[2].find(":")
-                bathroom_num = bedrooms[2][comma_index+1:]
-                res_df.loc[num, "bathrooms"] = bathroom_num
-            else:
-                if lable in mapping_dict:
-                    res_df.loc[num, mapping_dict[lable]] = value
-
-        # TODO: check findAll return is None or not for following
-        # Remaining: sqft, first day on market, sold_price, list_price, address, description
-        # sqft
-        if soup.findAll("span", {"class": "listing-prop-sqft"}) != []:
-            html_sqft = str(list(soup.findAll("span", {"class": "listing-prop-sqft"}))[0])
-            sqft_num = html_sqft.split("|")[1].split(" ")[1]
-            res_df.loc[num, 'sqft'] = sqft_num
-      
-        #first day on market
-        # <p class="listing-prop-size"> <span class="listing-prop-dom"> 12 DOM </span>
-        # <span>
-        # (20201204 - 20201216)
-        # </span>
-        # </p>
-        html_fdm = str(list(soup.findAll("p", {"class": "listing-prop-size"}))[0])
-        first_day_on_market = html_fdm.split("<span>")[1].strip()[1:9]
-        res_df.loc[num, 'first day on market'] = first_day_on_market
-
-        # case one: for sale
-        if "Sale" in title_part_two:
-            html_sale_price = str(list(soup.findAll("span", {"class": "detail-price"}))[0])
-            start = html_sale_price.find("$")
-            end = html_sale_price.find(" |")
-            sale_price = html_sale_price[start+1:end]
-            res_df.loc[num, 'list_price'] = sale_price
+            user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
             
-        # case two: sold
-        else:
-            # list price
-            # <h6 class="detail-lp">
-            #    $539,900 Asking price
-            #   </h6>
-            html_list_price = str(list(soup.findAll("h6", {"class": "detail-lp"}))[0])
-            start = html_list_price.find("$")
-            end = html_list_price.find(" Asking")
-            list_price = html_list_price[start+1:end]
-            res_df.loc[num, 'list_price'] = list_price
+            headers={'User-Agent':user_agent,} 
 
-            # final price
-            # <span class="detail-price">
-            #     $535,000 Sold
-            #    </span>
-            html_sold_price = str(list(soup.findAll("span", {"class": "detail-price"}))[0])
-            start = html_sold_price.find("$")
-            end = html_sold_price.find(" Sold")
-            sold_price = html_sold_price[start+1:end]
-            res_df.loc[num, 'sold_price'] = sold_price
+            request=urllib.request.Request(url, None, headers) 
 
+            html_doc = urllib.request.urlopen(request).read()
+            
+            soup = bs.BeautifulSoup(html_doc, 'html.parser')
+            # soup = bs.BeautifulSoup(html_doc, 'lxml')
+            
+            print(soup.prettify())
 
+            # populate link url
+            res_df.loc[num, 'link'] = url
 
-        # <span class="listing-prop-address">
-        #    44 Beverly Glen Blvd
-        #   </span>
-        #   <p class="listing-prop-address">
-        #    Toronto, Ontario, M1W1W2
-        #   </p>
-        html_address_first_half = str(list(soup.findAll("span", {"class": "listing-prop-address"}))[0])
-        start = html_address_first_half.find(">")
-        end = html_address_first_half.find("</")
-        address_first_half = html_address_first_half[start+1:end].strip()
+            # populate title & transaction_type
+            title_components_lst = soup.title.contents[0].split('|')
+            title_part_one = title_components_lst[0].strip()
+            title_part_two = title_components_lst[1].strip()
+            res_df.loc[num, 'title'] = title_part_one + " | " + title_part_two
 
-        html_address_second_half = str(list(soup.findAll("p", {"class": "listing-prop-address"}))[0])
-        s = html_address_second_half.find(">")
-        e = html_address_second_half.find("</")
-        address_second_half = html_address_second_half[s+1:e].strip()
+            if "Sale" in title_part_two:
+                res_df.loc[num, 'transaction_type'] = "for sale"
+            elif "Sold" in title_part_two:
+                res_df.loc[num, 'transaction_type'] = "sold"
+            else:
+                print("Error,link No.{} 's title information is not expected".format(num))
+
+            # print(title_part_one + " | " + title_part_two)
+            # populate others
+            # MLS ID, home_type, level, bedrooms, bathrooms, den, exposure, parking, locker, maintanance fee
+            raw_html_lables = list(soup.findAll("span", {"class": "summary-label"}))
+            raw_html_values = list(soup.findAll("span", {"class": "summary-value"}))
+            
+            assert(len(raw_html_lables) == len(raw_html_values))
+
+            html_lables, html_values = [], []
+            
+            for i in range(len(raw_html_lables)):
+                # for lable
+                raw_labe = str(raw_html_lables[i])
+                start = raw_labe.find(">")
+                end = raw_labe.find("</")
+                lable = raw_labe[start+1:end]
+
+                # for value
+                raw_value = str(raw_html_values[i])
+                start = raw_value.find(">")
+                end = raw_value.find("</")
+                value = raw_value[start+1:end]
+
+                html_lables.append(lable)
+                html_values.append(value)
+            
+            for i in range(len(html_lables)):
+                lable = html_lables[i]
+                value = html_values[i]
+
+                if lable == "Rooms":
+                    # bedroom vs bathroom vs den
+                    print(value)
+                    bedrooms = value.split(',')
+                    
+                    # for bedroom & den
+                    if "+" in bedrooms[0]:
+                        # case 1: den exist
+                        plus_index = bedrooms[0].find("+")
+                        bedroom_num = bedrooms[0][plus_index - 1:plus_index]
+                        den_num = bedrooms[0][plus_index + 1:plus_index + 2]
+                        res_df.loc[num, "bedrooms"] = bedroom_num
+                        res_df.loc[num, "den"] = den_num
+                    else:
+                        # case 2: no den, all rooms are bedroom
+                        start = bedrooms[0].find(":")
+                        bedroom_num = bedrooms[0][start+1:]
+                        res_df.loc[num, "bedrooms"] = bedroom_num
+                        res_df.loc[num, "den"] = 0
+                    
+                    # for bathroom
+                    comma_index = bedrooms[2].find(":")
+                    bathroom_num = bedrooms[2][comma_index+1:]
+                    res_df.loc[num, "bathrooms"] = bathroom_num
+                else:
+                    if lable in mapping_dict:
+                        res_df.loc[num, mapping_dict[lable]] = value
+
+            # TODO: check findAll return is None or not for following
+            # Remaining: sqft, first day on market, sold_price, list_price, address, description
+            # sqft
+            if soup.findAll("span", {"class": "listing-prop-sqft"}) != []:
+                html_sqft = str(list(soup.findAll("span", {"class": "listing-prop-sqft"}))[0])
+                sqft_num = html_sqft.split("|")[1].split(" ")[1]
+                res_df.loc[num, 'sqft'] = sqft_num
         
-        address = address_first_half + ", " + address_second_half
-        res_df.loc[num, 'address'] = address
-        
-        print(soup.prettify())
-        
-        counter += 1
-        
-        # try:
-        # except:
-        #     print("link No.{} is a bad link".format(num))
-        if num == 0:
-            exit()
-        else:
-            print("_________________")
+            #first day on market
+            # <p class="listing-prop-size"> <span class="listing-prop-dom"> 12 DOM </span>
+            # <span>
+            # (20201204 - 20201216)
+            # </span>
+            # </p>
+            html_fdm = str(list(soup.findAll("p", {"class": "listing-prop-size"}))[0])
+            first_day_on_market = html_fdm.split("<span>")[1].strip()[1:9]
+            res_df.loc[num, 'first day on market'] = first_day_on_market
+
+            # list price and sold price
+            # case one: for sale
+            if "Sale" in title_part_two:
+                html_sale_price = str(list(soup.findAll("span", {"class": "detail-price"}))[0])
+                start = html_sale_price.find("$")
+                end = html_sale_price.find(" |")
+                sale_price = html_sale_price[start+1:end]
+                res_df.loc[num, 'list_price'] = sale_price
+                
+            # case two: sold
+            else:
+                # list price
+                # <h6 class="detail-lp">
+                #    $539,900 Asking price
+                #   </h6>
+                html_list_price = str(list(soup.findAll("h6", {"class": "detail-lp"}))[0])
+                start = html_list_price.find("$")
+                end = html_list_price.find(" Asking")
+                list_price = html_list_price[start+1:end]
+                res_df.loc[num, 'list_price'] = list_price
+
+                # final price
+                # <span class="detail-price">
+                #     $535,000 Sold
+                #    </span>
+                html_sold_price = str(list(soup.findAll("span", {"class": "detail-price"}))[0])
+                start = html_sold_price.find("$")
+                end = html_sold_price.find(" Sold")
+                sold_price = html_sold_price[start+1:end]
+                res_df.loc[num, 'sold_price'] = sold_price
+
+
+            # address
+            # <span class="listing-prop-address">
+            #    44 Beverly Glen Blvd
+            #   </span>
+            #   <p class="listing-prop-address">
+            #    Toronto, Ontario, M1W1W2
+            #   </p>
+            html_address_first_half = str(list(soup.findAll("span", {"class": "listing-prop-address"}))[0])
+            start = html_address_first_half.find(">")
+            end = html_address_first_half.find("</")
+            address_first_half = html_address_first_half[start+1:end].strip()
+
+            html_address_second_half = str(list(soup.findAll("p", {"class": "listing-prop-address"}))[0])
+            s = html_address_second_half.find(">")
+            e = html_address_second_half.find("</")
+            address_second_half = html_address_second_half[s+1:e].strip()
+            
+            address = address_first_half + ", " + address_second_half
+            res_df.loc[num, 'address'] = address
+            
+            # description
+            # <meta content="19 Broadleaf Rd  Toronto Ontario, 3Bd 2Ba House For Sale, 
+            # Asking Price: undefined. 
+            # Fully Renovated Cozy Home Near Shop At Don Mills, $$$ Spent. 
+            # ...
+            # ...
+            # All New Ceiling And Drywall." 
+            # name="description"/>
+            html_description = str(list(soup.findAll("meta", {"name": "description"}))[0])
+            start = html_description.find(".")
+            end = html_description.find("name=")
+            description = html_description[start+1:end].strip()
+            res_df.loc[num, 'description'] = description
+
+            # print(description)
+            # print("----- divide -----")
+            
+            
+            print("download data for home {}".format(counter))
+            counter += 1
+
+        except:
+            print("link No.{} is a bad link".format(num))
+
+    # store the data frame
+
+    today = date.today()
+    day = today.strftime("%b-%d-%Y")
+
+    if "sale" in link_path:
+        res_df.to_csv('home_data/for_sale_data/home_for_sale_data_{}.csv'.format(day))
+    elif "sold" in link_path:
+        res_df.to_csv('home_data/sold_data/home_sold_data_{}.csv'.format(day))
+    else:
+        print("Error in link path") 
 
 if __name__ == '__main__':
     # Part One: download links data
