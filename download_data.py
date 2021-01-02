@@ -3,6 +3,7 @@ import numpy as np
 import urllib.request
 import bs4 as bs
 import time
+import requests
 from datetime import date
 from random import random
 
@@ -89,15 +90,23 @@ def download_home_data(link_path):
             # print(url)
             # print("-----------------------------")
 
-            user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+            # user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
             
-            headers={'User-Agent':user_agent,} 
+            # headers={'User-Agent':user_agent,} 
 
-            request=urllib.request.Request(url, None, headers) 
+            # request=urllib.request.Request(url, None, headers) 
 
-            html_doc = urllib.request.urlopen(request).read()
+            cookies={'locale':'en',
+            'cmate.sid':'K1T1EFKobeq0pAAGpyGCpqqR2hl6hlhvymQ4kITKK5JO9r8rnibhEhkZkjf1mcg1',
+            'k': '3e89535a07d2e0ef42450522f7a4a4d8b8de86c1'}
+
+            headers={'User-Agent': 'Mozilla/5.0'} 
+    
+            response = requests.get(url, cookies=cookies, headers=headers)
             
-            soup = bs.BeautifulSoup(html_doc, 'html.parser')
+            # html_doc = urllib.request.urlopen(request).read()
+            
+            soup = bs.BeautifulSoup(response.text, 'html.parser')
             # soup = bs.BeautifulSoup(html_doc, 'lxml')
             
             print(soup.prettify())
