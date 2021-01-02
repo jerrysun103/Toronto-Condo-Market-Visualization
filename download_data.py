@@ -18,7 +18,7 @@ def download_links(total_pages_num, url_prefix, start_offset, end_offset):
         
         url = url_prefix + str(page)
         
-        headers={'User-Agent':user_agent,} 
+        headers={'User-Agent':user_agent} 
 
         request=urllib.request.Request(url,None,headers) 
         data_raw = urllib.request.urlopen(request).read().decode('utf-8')
@@ -71,45 +71,32 @@ def download_home_data(link_path):
 
     # attributes in realmaster name
     # MLS ID, home_type, level, bedrooms, bathrooms, den, exposure, parking, locker, maintanance fee
-    realmaster_summary_dims = ["ID", "Ownership Type", "Level", "Rooms", "Exposure", "Parking Spots", 
+    realmaster_summary_dims = ["ID", "Type", "Level", "Rooms", "Exposure", "Parking Spots", 
     "Locker", "Maint Fee"]
 
     # mapping from realmaster name to output dataframe name
-    mapping_dict = {"ID":'MLS ID', "Ownership Type":'home_type', "Level":'level', "Exposure":'exposure', 
+    mapping_dict = {"ID":'MLS ID', "Type":'home_type', "Level":'level', "Exposure":'exposure', 
     "Parking Spots":'parking', "Locker":'locker', "Maint Fee": 'maintanance fee'}
 
     res_df = pd.DataFrame(columns = attributes_array)
 
     for num in range(num_of_link):
-        if num == 1:
-            break
+        sleep_time = random()
+        time.sleep(sleep_time)
 
         try:
-            # url = links_df.link[num]
-            url = "https://www.realmaster.com/en/toronto-on/245-dalesford-rd/422-stonegate-queensway-TRBW5060247?d=https://www.realmaster.com/en/sold-price/Toronto-ON?page=17"
-            # print(url)
-            # print("-----------------------------")
-
-            # user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+            url = links_df.link[num]
             
-            # headers={'User-Agent':user_agent,} 
-
-            # request=urllib.request.Request(url, None, headers) 
-
             cookies={'locale':'en',
-            'cmate.sid':'K1T1EFKobeq0pAAGpyGCpqqR2hl6hlhvymQ4kITKK5JO9r8rnibhEhkZkjf1mcg1',
+            'cmate.sid':'4A3PHVP8O7nGh1QaB3Yv9YNjyEl5E81DB4IVoBU4yla70f9E0VPAXIeZkjgahg3m',
             'k': '3e89535a07d2e0ef42450522f7a4a4d8b8de86c1'}
 
             headers={'User-Agent': 'Mozilla/5.0'} 
     
             response = requests.get(url, cookies=cookies, headers=headers)
             
-            # html_doc = urllib.request.urlopen(request).read()
-            
             soup = bs.BeautifulSoup(response.text, 'html.parser')
-            # soup = bs.BeautifulSoup(html_doc, 'lxml')
-            
-            print(soup.prettify())
+            #print(soup.prettify())
 
             # populate link url
             res_df.loc[num, 'link'] = url
@@ -127,14 +114,21 @@ def download_home_data(link_path):
             else:
                 print("Error,link No.{} 's title information is not expected".format(num))
 
+
             # print(title_part_one + " | " + title_part_two)
             # populate others
             # MLS ID, home_type, level, bedrooms, bathrooms, den, exposure, parking, locker, maintanance fee
             raw_html_lables = list(soup.findAll("span", {"class": "summary-label"}))
             raw_html_values = list(soup.findAll("span", {"class": "summary-value"}))
-            
-            assert(len(raw_html_lables) == len(raw_html_values))
 
+           
+            
+            if len(raw_html_lables) != len(raw_html_values):
+                print("Error: Line 131")
+            if len(raw_html_lables) == 0:
+                print("Error: Check cookies information")
+
+        
             html_lables, html_values = [], []
             
             for i in range(len(raw_html_lables)):
@@ -159,7 +153,7 @@ def download_home_data(link_path):
 
                 if lable == "Rooms":
                     # bedroom vs bathroom vs den
-                    print(value)
+                    # print(value)
                     bedrooms = value.split(',')
                     
                     # for bedroom & den
@@ -277,7 +271,7 @@ def download_home_data(link_path):
             counter += 1
 
         except:
-            print("link No.{} is a bad link".format(num))
+            print("Error: link No.{} is a bad link".format(num))
 
     # store the data frame
 
@@ -313,4 +307,4 @@ if __name__ == '__main__':
     for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_Dec-29-2020.csv"
     sold_link_path = "links_data/sold_links/house_sold_links_Dec-29-2020.csv"
 
-    download_home_data(sold_link_path)
+    download_home_data(for_sale_link_path)
