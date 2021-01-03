@@ -102,7 +102,7 @@ def download_home_data(link_path):
             response = requests.get(url, cookies=cookies, headers=headers)
             
             soup = bs.BeautifulSoup(response.text, 'html.parser')
-            print(soup.prettify())
+            #print(soup.prettify())
 
             # populate link url
             res_df.loc[num, 'link'] = url
@@ -322,7 +322,7 @@ if __name__ == '__main__':
     date = today.strftime("%b-%d-%Y")
 
     for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_{}.csv".format(date)
-    sold_link_path = "links_data/sold_links/house_sold_links_{}}.csv".format(date)
+    sold_link_path = "links_data/sold_links/house_sold_links_{}.csv".format(date)
 
     print("Start: Download home data for all homes for sale\n")
     download_home_data(for_sale_link_path)
