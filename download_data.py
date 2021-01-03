@@ -84,17 +84,17 @@ def download_home_data(link_path):
         sleep_time = random()
         time.sleep(sleep_time)
         
-        # below is for test
+        #below is for test
         # if num == 1:
         #     break
         try:
             url = links_df.link[num]
 
             # below for test
-            # url = "https://www.realmaster.com/en/toronto-on/5-vicora-linkway/1904-tcfl---flemingdon-park-DDF22673627?d=https://www.realmaster.com/en/for-sale/Toronto-ON?page=4"
+            # url = "https://www.realmaster.com/en/toronto-on/address/RM1-29026?d=https://www.realmaster.com/en/for-sale/Toronto-ON?page=51"
             
             cookies={'locale':'en',
-            'cmate.sid':'4A3PHVP8O7nGh1QaB3Yv9YNjyEl5E81DB4IVoBU4yla70f9E0VPAXIeZkjgahg3m',
+            'cmate.sid':'GUEY3JGw4ajf7gqIJWgJIDA41a4mULzPkHQ11oNpk9Bs5E7Pxo2RlgzZkjghq9vr',
             'k': '3e89535a07d2e0ef42450522f7a4a4d8b8de86c1'}
 
             headers={'User-Agent': 'Mozilla/5.0'} 
@@ -102,7 +102,7 @@ def download_home_data(link_path):
             response = requests.get(url, cookies=cookies, headers=headers)
             
             soup = bs.BeautifulSoup(response.text, 'html.parser')
-            # print(soup.prettify())
+            print(soup.prettify())
 
             # populate link url
             res_df.loc[num, 'link'] = url
@@ -299,25 +299,30 @@ def download_home_data(link_path):
 
 if __name__ == '__main__':
     # Part One: download links data
-    # for_sale_url_prefix = 'https://www.realmaster.com/en/for-sale/Toronto-ON?page='
-    # sold_url_prefix = "https://www.realmaster.com/en/sold-price/Toronto-ON?page="
-    # start_offset = 6
-    # end_offset = 1
+    for_sale_url_prefix = 'https://www.realmaster.com/en/for-sale/Toronto-ON?page='
+    sold_url_prefix = "https://www.realmaster.com/en/sold-price/Toronto-ON?page="
+    start_offset = 6
+    end_offset = 1
 
     # # hard code for these two number
     # # do automation in future
-    # total_pages_num_for_sale = 170
-    # total_pages_num_for_sold = 90
+    total_pages_num_for_sale = 143
+    total_pages_num_for_sold = 87
 
     # # download links for sale homes
-    # download_links(total_pages_num_for_sale, for_sale_url_prefix, start_offset, end_offset)
+    download_links(total_pages_num_for_sale, for_sale_url_prefix, start_offset, end_offset)
 
     # # download links for sold homes
-    # download_links(total_pages_num_for_sold, sold_url_prefix, start_offset, end_offset)
+    download_links(total_pages_num_for_sold, sold_url_prefix, start_offset, end_offset)
+
+    # ----------------------------------------------------------------------------------------
 
     # Part two: download homes data
-    for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_Dec-29-2020.csv"
-    sold_link_path = "links_data/sold_links/house_sold_links_Dec-29-2020.csv"
+    today = date.today()
+    date = today.strftime("%b-%d-%Y")
+
+    for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_{}.csv".format(date)
+    sold_link_path = "links_data/sold_links/house_sold_links_{}}.csv".format(date)
 
     print("Start: Download home data for all homes for sale\n")
     download_home_data(for_sale_link_path)
