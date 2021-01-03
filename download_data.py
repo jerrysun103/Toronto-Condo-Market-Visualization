@@ -66,7 +66,7 @@ def download_home_data(link_path):
 
     # attributes in output dataframe
     attributes_array = ['title', 'MLS ID', 'transaction_type', 'home_type', 'level', 
-    'first day on market', 'sold_price', 'list_price', 'bedrooms', 'bathrooms', 'den', 'sqft', 'exposure', 
+    'first day on market', 'last day on market', 'sold_price', 'list_price', 'bedrooms', 'bathrooms', 'den', 'sqft', 'exposure', 
     'parking', 'locker', 'maintanance fee', 'description', 'link', 'address']
 
     # attributes in realmaster name
@@ -204,6 +204,11 @@ def download_home_data(link_path):
             first_day_on_market = html_fdm.split("<span>")[1].strip()[1:9]
             res_df.loc[num, 'first day on market'] = first_day_on_market
 
+            # if sold, populate the last day on market
+            if "Sold" in title_part_two:
+                last_day_on_market = html_fdm.split("<span>")[1].strip()[12:20]
+                res_df.loc[num, 'last day on market'] = last_day_on_market
+
             # list price and sold price
             # case one: for sale
             if "Sale" in title_part_two:
@@ -319,6 +324,6 @@ if __name__ == '__main__':
     print("Completed: Download home data for all homes for sale\n")
 
 
-    # print("Start: Download home data for all homes sold\n")
-    # download_home_data(sold_link_path)
-    # print("Completed: Download home data for all homes sold\n")
+    print("Start: Download home data for all homes sold\n")
+    download_home_data(sold_link_path)
+    print("Completed: Download home data for all homes sold\n")
