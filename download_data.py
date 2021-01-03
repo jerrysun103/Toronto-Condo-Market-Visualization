@@ -94,7 +94,7 @@ def download_home_data(link_path):
             # url = "https://www.realmaster.com/en/toronto-on/address/RM1-29026?d=https://www.realmaster.com/en/for-sale/Toronto-ON?page=51"
             
             cookies={'locale':'en',
-            'cmate.sid':'GUEY3JGw4ajf7gqIJWgJIDA41a4mULzPkHQ11oNpk9Bs5E7Pxo2RlgzZkjghq9vr',
+            'cmate.sid':'1ojKba7ms1sEhWEABeddqDfb9m9A7nCf58SWDP4tOPrtMA8xk0KD8SyZkjhbl076',
             'k': '3e89535a07d2e0ef42450522f7a4a4d8b8de86c1'}
 
             headers={'User-Agent': 'Mozilla/5.0'} 
@@ -287,13 +287,13 @@ def download_home_data(link_path):
 
     # store the data frame
 
-    today = date.today()
-    day = today.strftime("%b-%d-%Y")
+    t = date.today()
+    d = today.strftime("%b-%d-%Y")
 
     if "sale" in link_path:
-        res_df.to_csv('home_data/for_sale_data/home_for_sale_data_{}.csv'.format(day))
+        res_df.to_csv('home_data/for_sale_data/home_for_sale_data_{}.csv'.format(d))
     elif "sold" in link_path:
-        res_df.to_csv('home_data/sold_data/home_sold_data_{}.csv'.format(day))
+        res_df.to_csv('home_data/sold_data/home_sold_data_{}.csv'.format(d))
     else:
         print("Error in link path") 
 
@@ -306,8 +306,8 @@ if __name__ == '__main__':
 
     # # hard code for these two number
     # # do automation in future
-    total_pages_num_for_sale = 143
-    total_pages_num_for_sold = 87
+    total_pages_num_for_sale = 142
+    total_pages_num_for_sold = 83
 
     # # download links for sale homes
     download_links(total_pages_num_for_sale, for_sale_url_prefix, start_offset, end_offset)
@@ -319,10 +319,10 @@ if __name__ == '__main__':
 
     # Part two: download homes data
     today = date.today()
-    date = today.strftime("%b-%d-%Y")
+    today_date = today.strftime("%b-%d-%Y")
 
-    for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_{}.csv".format(date)
-    sold_link_path = "links_data/sold_links/house_sold_links_{}.csv".format(date)
+    for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_{}.csv".format(today_date)
+    sold_link_path = "links_data/sold_links/house_sold_links_{}.csv".format(today_date)
 
     print("Start: Download home data for all homes for sale\n")
     download_home_data(for_sale_link_path)
