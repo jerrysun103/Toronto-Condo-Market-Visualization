@@ -280,7 +280,7 @@ def download_home_data(link_path, cookies):
             counter += 1
 
         except:
-            print("Error: link No.{} is a bad link".format(num))
+            print("Error: link No.{} is a bad link, url: {}".format(num, url))
 
     # store the data frame
 
