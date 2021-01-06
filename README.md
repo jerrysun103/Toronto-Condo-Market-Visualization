@@ -4,8 +4,8 @@ This project starts on 2020 COVID-19 pandemic period. As a melted pot city, Toro
 The motivation of the project is to create a systematic way to inspect Toronto Condo market. When I used third-party website to observe the market, such as Redfin, and zillow, I am not satisfied with provided functionality. The following key takeaways are what I am concerned at the beginning of the project:
 
 * See the overall and accumulated market condition given a certain time period.
+* Create Toronto condo price map visualization.
 * Distinguish city areas based on price/sqft.
 * Build a reliable pricing model for Toronto condo market.
-* Create Toronto condo price map visualization.
 * Create Toronto condo price prediction map visualization.
 * Find more insights.
