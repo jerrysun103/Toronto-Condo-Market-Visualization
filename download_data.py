@@ -57,7 +57,7 @@ def download_links(total_pages_num, url_prefix, start_offset, end_offset):
         print("Error in url prefix")
 
 
-def download_home_data(link_path):
+def download_home_data(link_path, cookies):
     #read links 
     links_df = pd.read_csv(link_path, index_col = 0)
     num_of_link = links_df.shape[0]
@@ -93,9 +93,6 @@ def download_home_data(link_path):
             # below for test
             # url = "https://www.realmaster.com/en/toronto-on/100-mornelle-crt/1016-morningside-TRBE5000585?d=https://www.realmaster.com/en/sold-price/Toronto-ON?page=79"
             
-            cookies={'locale':'en',
-            'cmate.sid':'f929FQRkIdjVYKXtimG08tTM8DP2Ho1YHH6VjiD0A5MyaiogYwPEl18Zkjhfqc6i',
-            'k': '3e89535a07d2e0ef42450522f7a4a4d8b8de86c1'}
 
             headers={'User-Agent': 'Mozilla/5.0'} 
 
@@ -306,7 +303,7 @@ if __name__ == '__main__':
 
     # # hard code for these two number
     # # do automation in future
-    total_pages_num_for_sale = 142
+    total_pages_num_for_sale = 143
     total_pages_num_for_sold = 83
 
     # # download links for sale homes
@@ -324,11 +321,15 @@ if __name__ == '__main__':
     for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_{}.csv".format(today_date)
     sold_link_path = "links_data/sold_links/house_sold_links_{}.csv".format(today_date)
 
+    cookies={'locale':'en',
+            'cmate.sid':'bN5Mg6b4WpUyloSyuG4p1mkIR48qXUXovgPtOY0dWhLNnCDWM5LYFw8Zkjlo48t6',
+            'k': '49ad73db2c54ac0cb3fc0a4b73b2aa138f54a355'}
+
     print("Start: Download home data for all homes for sale\n")
-    download_home_data(for_sale_link_path)
+    download_home_data(link_path=for_sale_link_path, cookies=cookies)
     print("Completed: Download home data for all homes for sale\n")
 
 
     print("Start: Download home data for all homes sold\n")
-    download_home_data(sold_link_path)
+    download_home_data(link_path=sold_link_path, cookies=cookies)
     print("Completed: Download home data for all homes sold\n")
