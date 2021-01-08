@@ -304,7 +304,7 @@ if __name__ == '__main__':
     # # hard code for these two number
     # # do automation in future
     total_pages_num_for_sale = 143
-    total_pages_num_for_sold = 83
+    total_pages_num_for_sold = 81
 
     # # download links for sale homes
     download_links(total_pages_num_for_sale, for_sale_url_prefix, start_offset, end_offset)
@@ -322,8 +322,8 @@ if __name__ == '__main__':
     sold_link_path = "links_data/sold_links/house_sold_links_{}.csv".format(today_date)
 
     cookies={'locale':'en',
-            'cmate.sid':'bN5Mg6b4WpUyloSyuG4p1mkIR48qXUXovgPtOY0dWhLNnCDWM5LYFw8Zkjlo48t6',
-            'k': '49ad73db2c54ac0cb3fc0a4b73b2aa138f54a355'}
+            'cmate.sid':'r9nyTyTw3K646DAbDlLL9s3km1NcfgeBQug0xnM593l8aYRpWVdYkstZkjoiwrc4',
+            'k': 'e0f397a4cad42d9215c9ecb2720015f546e13bdb'}
 
     print("Start: Download home data for all homes for sale\n")
     download_home_data(link_path=for_sale_link_path, cookies=cookies)
