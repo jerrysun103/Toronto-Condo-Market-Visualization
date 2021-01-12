@@ -9,6 +9,6 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 * Create Toronto condo price prediction map visualization.
 * Find more insights.
 
-Click following button to continue
+Click following url to continue
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jerrysun103/Toronto-Condo-Price-Visualization/HEAD?urlpath=https%3A%2F%2Fgithub.com%2Fjerrysun103%2FToronto-Condo-Price-Visualization%2Fblob%2Fmaster%2Fdata_analysis.ipynb)
+https://mybinder.org/v2/gh/jerrysun103/Toronto-Condo-Price-Visualization/HEAD?urlpath=https%3A%2F%2Fgithub.com%2Fjerrysun103%2FToronto-Condo-Price-Visualization%2Fblob%2Fmaster%2Fdata_analysis.ipynb
