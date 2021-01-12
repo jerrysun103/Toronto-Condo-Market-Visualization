@@ -9,4 +9,5 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 * Create Toronto condo price prediction map visualization.
 * Find more insights.
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/jerrysun103/Toronto-Condo-Price-Visualization/HEAD)
+Click following button to continue
+
