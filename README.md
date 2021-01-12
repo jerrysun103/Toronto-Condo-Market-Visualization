@@ -8,3 +8,6 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 * Build a reliable pricing model for Toronto condo market.
 * Create Toronto condo price prediction map visualization.
 * Find more insights.
+
+Click following button to continue
+
