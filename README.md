@@ -7,6 +7,12 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 <img src="data_analysis_files/price_map.png" alt="drawing" width="1000"/>
 
 * See the overall and accumulated market condition given a certain time period.
+<img src="data_analysis_files/buyer_vs_seller.png" alt="drawing" width="1000"/>
+<img src="data_analysis_files/new_home_for_sale_listing_number .png" alt="drawing" width="1000"/>
+<img src="data_analysis_files/new_listing_number_vs_new_sold_number.png" alt="drawing" width="1000"/>
+<img src="data_analysis_files/Inventory_average_number.png" alt="drawing" width="1000"/>
+<img src="data_analysis_files/Inventory_divided_by_sold_number.png" alt="drawing" width="1000"/>
+
 * Build a reliable pricing model for Toronto condo market.
 * Create Toronto condo price prediction map visualization.
 * Find more insights.
