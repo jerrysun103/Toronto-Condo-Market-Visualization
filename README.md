@@ -15,8 +15,8 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 
 * Build a reliable pricing model for Toronto condo market.
 
-<em> Pricing model: Decision Forest </em>
-<img src="data_analysis_files/decision_forest.png" alt="drawing" width="1000"/>
+   <em> Pricing model: Decision Forest </em>
+   <img src="data_analysis_files/decision_forest.png" alt="drawing" width="1000"/>
 
 * Create Toronto condo price prediction map visualization.
 
