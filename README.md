@@ -20,7 +20,7 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 
 * Create Toronto condo price prediction map visualization.
 
-  Going to develop after collecting at least one year time series data
+  Going to develop the prediction model after collecting at least one year time series data
 
 * Find more insights.
 
