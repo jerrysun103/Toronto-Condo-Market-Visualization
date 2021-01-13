@@ -11,4 +11,4 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 
 Click following url to continue
 
-https://notebooks.gesis.org/binder/jupyter/user/jupyter-docker-stacks-f3x3lj4g/notebooks/Toronto-Condo-Price-Visualization.ipynb
+https://nbviewer.jupyter.org/github/jerrysun103/Toronto-Condo-Price-Visualization/blob/master/data_analysis.ipynb
