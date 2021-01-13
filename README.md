@@ -11,4 +11,4 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 
 Click following url to continue
 
-https://mybinder.org/v2/gh/jerrysun103/Toronto-Condo-Price-Visualization/HEAD?urlpath=https%3A%2F%2Fgithub.com%2Fjerrysun103%2FToronto-Condo-Price-Visualization%2Fblob%2Fmaster%2Fdata_analysis.ipynb
+https://gesis.mybinder.org/binder/v2/gh/jupyter/docker-stacks/703d8b2dcb886be2fe5aa4660a48fbcef647e7aa
