@@ -17,7 +17,9 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 <img src="data_analysis_files/decision_forest.png" alt="drawing" width="1000"/>
 
 * Create Toronto condo price prediction map visualization.
+
 Have to wait until collect at least one year time series data
+
 * Find more insights.
 
 Click following url to continue
