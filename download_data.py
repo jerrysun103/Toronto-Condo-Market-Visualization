@@ -294,27 +294,28 @@ def download_home_data(link_path, cookies):
     else:
         print("Error in link path") 
 
+
 if __name__ == '__main__':
-    # Part One: download links data
+    # # Part One: download links data
     # for_sale_url_prefix = 'https://www.realmaster.com/en/for-sale/Toronto-ON?page='
     # sold_url_prefix = "https://www.realmaster.com/en/sold-price/Toronto-ON?page="
     # start_offset = 6
     # end_offset = 1
 
-    # # # hard code for these two number
-    # # # do automation in future
-    # total_pages_num_for_sale = 144
-    # total_pages_num_for_sold = 76
+    # # hard code for these two number
+    # # do automation in future
+    # total_pages_num_for_sale = 142
+    # total_pages_num_for_sold = 81
 
-    # # # download links for sale homes
+    # # download links for sale homes
     # download_links(total_pages_num_for_sale, for_sale_url_prefix, start_offset, end_offset)
 
-    # # # download links for sold homes
+    # # download links for sold homes
     # download_links(total_pages_num_for_sold, sold_url_prefix, start_offset, end_offset)
 
-    # ----------------------------------------------------------------------------------------
+    #----------------------------------------------------------------------------------------
 
-    # Part two: download homes data
+    #Part two: download homes data
     today = date.today()
     today_date = today.strftime("%b-%d-%Y")
 
@@ -322,13 +323,12 @@ if __name__ == '__main__':
     sold_link_path = "links_data/sold_links/house_sold_links_{}.csv".format(today_date)
 
     cookies={'locale':'en',
-            'cmate.sid':'QuuCjTD4roy6mskbqzr8gcf1dTlJ4uGYUaRG6r3t8BwTVAA4nGNjaGwZkjtis9qi',
-            'k': '435353c24ca8638b8969dc6dab7d42616c2f3363'}
+            'cmate.sid':'6Eu3WrqKaeJjspMiqbedWod6H7ER5NJxXEGtlVJShdmKPbFEdPmfTBDZkjxq5qce',
+            'k': '1eef099d41e1ce2f40c6cba924d7a89cd5dcb515'}
 
     # print("Start: Download home data for all homes for sale\n")
     # download_home_data(link_path=for_sale_link_path, cookies=cookies)
     # print("Completed: Download home data for all homes for sale\n")
-
 
     print("Start: Download home data for all homes sold\n")
     download_home_data(link_path=sold_link_path, cookies=cookies)
