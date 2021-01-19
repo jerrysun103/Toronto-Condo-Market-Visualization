@@ -296,40 +296,40 @@ def download_home_data(link_path, cookies):
 
 
 if __name__ == '__main__':
-    # # Part One: download links data
-    # for_sale_url_prefix = 'https://www.realmaster.com/en/for-sale/Toronto-ON?page='
-    # sold_url_prefix = "https://www.realmaster.com/en/sold-price/Toronto-ON?page="
-    # start_offset = 6
-    # end_offset = 1
+    # Part One: download links data
+    for_sale_url_prefix = 'https://www.realmaster.com/en/for-sale/Toronto-ON?page='
+    sold_url_prefix = "https://www.realmaster.com/en/sold-price/Toronto-ON?page="
+    start_offset = 6
+    end_offset = 1
 
-    # # hard code for these two number
-    # # do automation in future
-    # total_pages_num_for_sale = 142
-    # total_pages_num_for_sold = 81
+    # hard code for these two number
+    # do automation in future
+    total_pages_num_for_sale = 141
+    total_pages_num_for_sold = 74
 
-    # # download links for sale homes
-    # download_links(total_pages_num_for_sale, for_sale_url_prefix, start_offset, end_offset)
+    # download links for sale homes
+    download_links(total_pages_num_for_sale, for_sale_url_prefix, start_offset, end_offset)
 
-    # # download links for sold homes
-    # download_links(total_pages_num_for_sold, sold_url_prefix, start_offset, end_offset)
+    # download links for sold homes
+    download_links(total_pages_num_for_sold, sold_url_prefix, start_offset, end_offset)
 
     #----------------------------------------------------------------------------------------
 
     #Part two: download homes data
-    today = date.today()
-    today_date = today.strftime("%b-%d-%Y")
+    # today = date.today()
+    # today_date = today.strftime("%b-%d-%Y")
 
-    for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_{}.csv".format(today_date)
-    sold_link_path = "links_data/sold_links/house_sold_links_{}.csv".format(today_date)
+    # for_sale_link_path = "links_data/for_sale_links/house_for_sale_links_{}.csv".format(today_date)
+    # sold_link_path = "links_data/sold_links/house_sold_links_{}.csv".format(today_date)
 
-    cookies={'locale':'en',
-            'cmate.sid':'6Eu3WrqKaeJjspMiqbedWod6H7ER5NJxXEGtlVJShdmKPbFEdPmfTBDZkjxq5qce',
-            'k': '1eef099d41e1ce2f40c6cba924d7a89cd5dcb515'}
+    # cookies={'locale':'en',
+    #         'cmate.sid':'6Eu3WrqKaeJjspMiqbedWod6H7ER5NJxXEGtlVJShdmKPbFEdPmfTBDZkjxq5qce',
+    #         'k': '1eef099d41e1ce2f40c6cba924d7a89cd5dcb515'}
 
-    # print("Start: Download home data for all homes for sale\n")
-    # download_home_data(link_path=for_sale_link_path, cookies=cookies)
-    # print("Completed: Download home data for all homes for sale\n")
+    # # print("Start: Download home data for all homes for sale\n")
+    # # download_home_data(link_path=for_sale_link_path, cookies=cookies)
+    # # print("Completed: Download home data for all homes for sale\n")
 
-    print("Start: Download home data for all homes sold\n")
-    download_home_data(link_path=sold_link_path, cookies=cookies)
-    print("Completed: Download home data for all homes sold\n")
+    # print("Start: Download home data for all homes sold\n")
+    # download_home_data(link_path=sold_link_path, cookies=cookies)
+    # print("Completed: Download home data for all homes sold\n")
