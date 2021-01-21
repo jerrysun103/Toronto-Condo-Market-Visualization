@@ -27,4 +27,4 @@ The motivation of the project is to create a systematic way to inspect Toronto C
 
 Click following url to continue
 
-https://nbviewer.jupyter.org/github/jerrysun103/Toronto-Condo-Price-Visualization/blob/master/data_analysis.ipynb
+https://nbviewer.jupyter.org/github/jerrysun103/Toronto-Condo-Price-Visualization/blob/master/data_analysis.ipynb?flush_cache=true
