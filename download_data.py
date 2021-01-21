@@ -304,8 +304,8 @@ if __name__ == '__main__':
 
     # hard code for these two number
     # do automation in future
-    total_pages_num_for_sale = 141
-    total_pages_num_for_sold = 74
+    total_pages_num_for_sale = 140
+    total_pages_num_for_sold = 78
 
     # download links for sale homes
     download_links(total_pages_num_for_sale, for_sale_url_prefix, start_offset, end_offset)
