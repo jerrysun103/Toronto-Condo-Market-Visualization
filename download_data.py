@@ -294,6 +294,88 @@ def download_home_data(link_path, cookies):
     else:
         print("Error in link path") 
 
+def valid_page_helper(url):
+    user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+    headers={'User-Agent':user_agent} 
+
+    request=urllib.request.Request(url, None, headers) 
+
+    data_raw = urllib.request.urlopen(request).read().decode('utf-8')
+
+    if "No result found" in data_raw:
+        return False
+    else:
+        return True
+
+def binary_search(link_prefix, num_lst):
+
+    # print(num_lst)
+
+    # base
+    if len(num_lst) == 1:
+        url = link_prefix + str(num_lst[0])
+        assert(valid_page_helper(url) == True)
+        return num_lst[0]
+
+    elif len(num_lst) == 2:
+        
+        url_1 = link_prefix + str(num_lst[0])
+        url_2 = link_prefix + str(num_lst[1])
+        bool_1 = valid_page_helper(url_1)
+        bool_2 = valid_page_helper(url_2)
+
+        if bool_2:
+            res = num_lst[1]
+            return res
+        elif bool_1:
+            res = num_lst[0]
+            return res
+        else:
+            exit("something uknown wrong")
+
+    else:
+        min_url = link_prefix + str(num_lst[0])
+        max_url = link_prefix + str(num_lst[-1])
+
+        left = valid_page_helper(min_url)
+        right = valid_page_helper(max_url)
+
+        if left and right:
+            print(min_url)
+            print(max_url)
+            exit("Need to adjust the initial page number")
+        else:
+            if right:
+                return binary_search(link_prefix, num_lst[-1:])
+                
+            middle_num = len(num_lst) // 2
+            middle_url = link_prefix + str(num_lst[middle_num])
+            middle = valid_page_helper(middle_url)
+            
+            if middle and not right:
+                return binary_search(link_prefix, num_lst[middle_num:])
+            elif not middle:
+                return binary_search(link_prefix, num_lst[:middle_num+1])
+
+        
+
+def find_the_valid_page_numbers(sale_link_prefix, sold_link_prefix):
+    # initial numbers
+    pages_num_for_sale = 140
+    pages_num_for_sold = 80
+    multiple = 2
+
+    sale_page_num_lst = list(range(1, pages_num_for_sale * multiple))
+    sold_page_num_lst = list(range(1, pages_num_for_sold * multiple))
+    
+    # Part one: extract the vilid page number for sale
+    pages_num_for_sale = binary_search(sale_link_prefix, sale_page_num_lst)
+    
+
+    # Part two: extract the vilid page number for sold
+    pages_num_for_sold = binary_search(sold_link_prefix, sold_page_num_lst)
+
+    return pages_num_for_sale, pages_num_for_sold
 
 if __name__ == '__main__':
     # Part One: download links data
@@ -302,10 +384,10 @@ if __name__ == '__main__':
     start_offset = 6
     end_offset = 1
 
-    # hard code for these two number
-    # do automation in future
-    total_pages_num_for_sale = 140
-    total_pages_num_for_sold = 78
+    # find max valid pages 
+    
+    total_pages_num_for_sale, total_pages_num_for_sold = find_the_valid_page_numbers(for_sale_url_prefix, sold_url_prefix)
+    print("Find max valid pages, sale:{}, sold:{}".format(total_pages_num_for_sale, total_pages_num_for_sold))
 
     # download links for sale homes
     download_links(total_pages_num_for_sale, for_sale_url_prefix, start_offset, end_offset)
