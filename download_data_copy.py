@@ -323,8 +323,8 @@ if __name__ == '__main__':
     sold_link_path = "links_data/sold_links/house_sold_links_{}.csv".format(today_date)
 
     cookies={'locale':'en',
-            'cmate.sid':'5OoRBnBkurSNWjvh1WKrW2yaLD1UWgJIJt8O7M3eeLobYiIKq4nQyqiZkk5pj8mw',
-            'k': 'ade26cf176c2a032c1ed1cf688789a87ea3c4076'}
+            'cmate.sid':'SVO3E5GYqwR9GfI7HmFXXLyLhizq7GjSLBi3Jbgi6DzISCgenKjwnlHZkk9xadlb',
+            'k': '74c4d6f30de23f3f935c0f72596c3fc7bcb8473d'}
 
     # # print("Start: Download home data for all homes for sale\n")
     # # download_home_data(link_path=for_sale_link_path, cookies=cookies)
