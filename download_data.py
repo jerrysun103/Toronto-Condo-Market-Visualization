@@ -15,10 +15,10 @@ def download_links(total_pages_num, url_prefix, start_offset, end_offset):
     shuffle_numbers = list(range(1,total_pages_num + 1))
     random.shuffle(shuffle_numbers)
     
-    print(shuffle_numbers)
+    page_counter = 0
 
     for page in shuffle_numbers:
-    
+        page_counter+=1
         user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
         
         url = url_prefix + str(page)
@@ -49,7 +49,7 @@ def download_links(total_pages_num, url_prefix, start_offset, end_offset):
             except:
                 print("An exception occurred")
         
-        print("download links on page {}".format(page))
+        print("download links on page {}".format(page_counter))
 
     today = date.today()
     day = today.strftime("%b-%d-%Y")
