@@ -4,15 +4,20 @@ import urllib.request
 import bs4 as bs
 import time
 import requests
+import random
 from datetime import date
-from random import random
+from random import random as rd
 
 
 def download_links(total_pages_num, url_prefix, start_offset, end_offset):
     links_done = 0
     links = pd.DataFrame(columns=['link'])  
+    shuffle_numbers = list(range(1,total_pages_num + 1))
+    random.shuffle(shuffle_numbers)
+    
+    print(shuffle_numbers)
 
-    for page in range(1,total_pages_num + 1):
+    for page in shuffle_numbers:
     
         user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
         
@@ -27,7 +32,7 @@ def download_links(total_pages_num, url_prefix, start_offset, end_offset):
 
         data_split = data_raw.split('<a class="listing-prop')[1:]
 
-        sleep_time = random()
+        sleep_time = rd()
         time.sleep(sleep_time)
 
         one_page_homes_num = len(data_split)
@@ -81,7 +86,7 @@ def download_home_data(link_path, cookies):
     res_df = pd.DataFrame(columns = attributes_array)
 
     for num in range(num_of_link):
-        sleep_time = random()
+        sleep_time = rd()
         time.sleep(sleep_time)
         
         #below is for test
@@ -308,7 +313,8 @@ def valid_page_helper(url):
         return True
 
 def binary_search(link_prefix, num_lst):
-
+    sleep_time = rd()
+    time.sleep(sleep_time)
     # print(num_lst)
 
     # base
