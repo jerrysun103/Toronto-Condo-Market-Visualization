@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import urllib.request
 import bs4 as bs
-import time
 import requests
 import random
+import time
 from datetime import date
 from random import random as rd
 
