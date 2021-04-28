@@ -368,7 +368,7 @@ def binary_search(link_prefix, num_lst):
 def find_the_valid_page_numbers(sale_link_prefix, sold_link_prefix):
     # initial numbers
     pages_num_for_sale = 140
-    pages_num_for_sold = 80
+    pages_num_for_sold = 90
     multiple = 2
 
     sale_page_num_lst = list(range(1, pages_num_for_sale * multiple))
